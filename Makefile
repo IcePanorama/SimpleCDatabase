@@ -1,5 +1,5 @@
 main:
-	gcc main.c -o main -Werror -Wpedantic -Wall
+	gcc src/*.c -I./include/ -o main -Werror -Wpedantic -Wall
 
 clean:
 	rm main
