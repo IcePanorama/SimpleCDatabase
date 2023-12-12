@@ -2,14 +2,20 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "input_buffer.h"
 #include "meta_command_result.h"
+#include "table.h"
 #include "statement.h"
+
+void print_prompt(void);
+void read_input(InputBuffer* input_buffer);
 
 int
 main(void)
 {
+    Table* table = new_table();
     InputBuffer* input_buffer = new_input_buffer();
 
     while (true)
@@ -34,14 +40,24 @@ main(void)
         {
             case (PREPARE_SUCCESS):
                 break;
+            case (PREPARE_SYNTAX_ERROR):
+                puts("Syntax error. Could not parse statement.");
+                continue;
             case (PREPARE_UNRECOGNIZED_STATEMENT):
                 printf("Unrecognized keyword at start of '%s'.\n", 
                         input_buffer->buffer);
                 continue;
         }
 
-        execute_statement(&statement);
-        puts("Executed.");
+        switch (execute_statement(&statement, table))
+        {
+            case (EXECUTE_SUCCESS):
+                puts("Executed.");
+                break;
+            case (EXECUTE_TABLE_FULL):
+                puts("Error: Table full.");
+                break;
+        }
     }
 
 
