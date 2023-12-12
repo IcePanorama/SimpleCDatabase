@@ -1,6 +1,8 @@
 #ifndef _STATEMENT_H_
 #define _STATEMENT_H_
 
+#include "input_buffer.h"
+
 typedef enum {
     PREPARE_SUCCESS,
     PREPARE_SYNTAX_ERROR,
@@ -28,7 +30,6 @@ ExecuteResult execute_statement(Statement* statement, Table* table);
 ExecuteResult execute_select(Statement* statement, Table* table);
 ExecuteResult execute_insert(Statement* statement, Table* table);
 
-#include "input_buffer.h"
 
 PrepareResult prepare_statement(InputBuffer* input_buffer, 
         Statement* statement);
