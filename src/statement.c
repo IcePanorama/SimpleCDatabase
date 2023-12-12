@@ -12,7 +12,7 @@ prepare_statement(InputBuffer* input_buffer, Statement* statement)
     {
         statement->type = STATEMENT_INSERT;
         int args_assigned = sscanf(input_buffer->buffer, "insert %d %s %s", 
-                &(statement->row_to_insert.id), statement->row_to_insert.username, 
+                (int*)&(statement->row_to_insert.id), statement->row_to_insert.username, 
                 statement->row_to_insert.email);
         if (args_assigned < 3)
         {
