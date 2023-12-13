@@ -40,6 +40,9 @@ main(void)
         {
             case (PREPARE_SUCCESS):
                 break;
+            case (PREPARE_STRING_TOO_LONG):
+                puts("String is too long");
+                continue;
             case (PREPARE_SYNTAX_ERROR):
                 puts("Syntax error. Could not parse statement.");
                 continue;
