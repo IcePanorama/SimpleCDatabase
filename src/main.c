@@ -40,6 +40,9 @@ main(void)
         {
             case (PREPARE_SUCCESS):
                 break;
+            case (PREPARE_NEGATIVE_ID):
+                puts("ID must be positive.");
+                continue;
             case (PREPARE_STRING_TOO_LONG):
                 puts("String is too long");
                 continue;

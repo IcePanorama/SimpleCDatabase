@@ -21,6 +21,11 @@ prepare_insert(InputBuffer* input_buffer, Statement* statement)
     }
 
     int id = atoi(id_string);
+    if (id < 0)
+    {
+        return PREPARE_NEGATIVE_ID;
+    }
+
     if (strlen(username) > COLUMN_USERNAME_SIZE)
     {
         return PREPARE_STRING_TOO_LONG;
