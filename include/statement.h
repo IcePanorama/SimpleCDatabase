@@ -30,7 +30,7 @@ typedef struct {
 ExecuteResult execute_statement(Statement* statement, Table* table);
 ExecuteResult execute_select(Statement* statement, Table* table);
 ExecuteResult execute_insert(Statement* statement, Table* table);
-
+PrepareResult prepare_insert(InputBuffer* input_buffer, Statement* statement);
 
 PrepareResult prepare_statement(InputBuffer* input_buffer, 
         Statement* statement);

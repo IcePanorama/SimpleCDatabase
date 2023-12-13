@@ -5,8 +5,6 @@
 #include "input_buffer.h"
 #include "statement.h"
 
-PrepareResult prepare_insert(InputBuffer* input_buffer, Statement* statement);
-
 PrepareResult 
 prepare_insert(InputBuffer* input_buffer, Statement* statement)
 {
