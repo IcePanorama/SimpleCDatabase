@@ -8,6 +8,8 @@
 #define COLUMN_EMAIL_SIZE 255
 #define size_of_attribute(Struct, Attribute) sizeof(((Struct*)0)->Attribute)
 
+#include "pager.h"
+
 extern const uint32_t PAGE_SIZE;
 extern const uint32_t ID_SIZE;
 extern const uint32_t USERNAME_SIZE;
@@ -25,19 +27,12 @@ typedef struct {
     char email[COLUMN_EMAIL_SIZE + 1];
 } Row;  
 
-typedef struct{
-    int file_descriptor;
-    uint32_t file_length;
-    void* pages[TABLE_MAX_PAGES];
-} Pager;
-
 typedef struct {
     uint32_t num_rows;
-    Pager* pager;
+    struct Pager* pager;
 } Table;
 
 Table* db_open(const char* filename);
-//void free_table(Table* table);
 void serialize_row(Row* source, void* destination);
 void deserialize_row(void* source, Row* destination);
 void* row_slot(Table* table, uint32_t row_num);
