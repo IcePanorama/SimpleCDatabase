@@ -84,5 +84,5 @@ describe 'database' do
             "db > Executed.",
             "db > ",
         ])
-
+    end
 end
