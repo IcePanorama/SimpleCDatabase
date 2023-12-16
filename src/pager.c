@@ -26,6 +26,13 @@ pager_open(const char* filename)
     Pager* pager = malloc(sizeof(Pager));
     pager->file_descriptor = fd;
     pager->file_length = file_length;
+    pager->num_pages = (file_length / PAGE_SIZE);
+
+    if (file_length % PAGE_SIZE != 0)
+    {
+        puts("Db file is not a whole number of pages. Corrupt file.");
+        exit(EXIT_FAILURE);
+    }
 
     for (uint32_t i = 0; i < TABLE_MAX_PAGES; i++)
     {
@@ -70,13 +77,18 @@ get_page(Pager* pager, uint32_t page_num)
         }
 
         pager->pages[page_num] = page;
+
+        if(page_num >= pager->num_pages)
+        {
+            pager->num_pages = page_num + 1;
+        }
     }
 
     return pager->pages[page_num];
 }
 
 void 
-pager_flush(Pager* pager, uint32_t page_num, uint32_t size)
+pager_flush(Pager* pager, uint32_t page_num)
 {
     if(pager->pages[page_num] == NULL)
     {
@@ -93,7 +105,7 @@ pager_flush(Pager* pager, uint32_t page_num, uint32_t size)
     }
 
     ssize_t bytes_written = write(pager->file_descriptor, 
-                pager->pages[page_num], size);
+                pager->pages[page_num], PAGE_SIZE);
 
     if (bytes_written == -1)
     {
