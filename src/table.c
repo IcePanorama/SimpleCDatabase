@@ -28,7 +28,12 @@ const uint8_t COMMON_NODE_HEADER_SIZE = NODE_TYPE_SIZE + IS_ROOT_SIZE + PARENT_P
 
 const uint32_t LEAF_NODE_NUM_CELLS_SIZE = sizeof(uint32_t);
 const uint32_t LEAF_NODE_NUM_CELLS_OFFSET = COMMON_NODE_HEADER_SIZE;
-const uint32_t LEAF_NODE_HEADER_SIZE = COMMON_NODE_HEADER_SIZE + LEAF_NODE_NUM_CELLS_SIZE;
+const uint32_t LEAF_NODE_NEXT_LEAF_SIZE = sizeof(uint32_t);
+const uint32_t LEAF_NODE_NEXT_LEAF_OFFSET = LEAF_NODE_NUM_CELLS_OFFSET + 
+                                            LEAF_NODE_NUM_CELLS_SIZE;
+const uint32_t LEAF_NODE_HEADER_SIZE = COMMON_NODE_HEADER_SIZE + 
+                                       LEAF_NODE_NUM_CELLS_SIZE + 
+                                       LEAF_NODE_NEXT_LEAF_SIZE;
 const uint32_t LEAF_NODE_KEY_SIZE = sizeof(uint32_t);
 const uint32_t LEAF_NODE_KEY_OFFSET = 0;
 const uint32_t LEAF_NODE_VALUE_SIZE = ROW_SIZE;
@@ -157,6 +162,7 @@ initialize_leaf_node(void* node)
     set_node_type(node, NODE_LEAF);
     set_node_root(node, false);
     *leaf_node_num_cells(node) = 0;
+    *leaf_node_next_leaf(node) = 0; // 0 represents no sibling.
 }
 
 void 
@@ -227,6 +233,8 @@ leaf_node_split_and_insert(Cursor* cursor, uint32_t key, Row* value)
     uint32_t new_page_num = get_unused_page_num(cursor->table->pager);
     void* new_node = get_page(cursor->table->pager, new_page_num);
     initialize_leaf_node(new_node);
+    *leaf_node_next_leaf(new_node) = *leaf_node_next_leaf(old_node);
+    *leaf_node_next_leaf(old_node) = new_page_num;
 
     /*
      *  All existing keys plus new key should be divided evenly between
@@ -250,7 +258,9 @@ leaf_node_split_and_insert(Cursor* cursor, uint32_t key, Row* value)
 
         if (i == cursor->cell_num)
         {
-            serialize_row(value, destination);
+            serialize_row(value,
+                          leaf_node_value(destination_node, index_within_node));
+            *leaf_node_key(destination_node, index_within_node) = key;
         }
         else if (i > cursor->cell_num)
         {
@@ -380,3 +390,10 @@ set_node_root(void* node, bool is_root)
     uint8_t value = is_root;
     *((uint8_t*)(node + IS_ROOT_OFFSET)) = value;
 }
+
+uint32_t* 
+leaf_node_next_leaf(void* node)
+{
+    return node + LEAF_NODE_NEXT_LEAF_OFFSET;
+}
+

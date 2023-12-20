@@ -83,5 +83,6 @@ uint32_t get_node_max_key(void* node);
 bool is_node_root(void* node);
 void set_node_root(void* node, bool is_root);
 void initialize_internal_node(void* node);
+uint32_t* leaf_node_next_leaf(void* node);
 
 #endif
