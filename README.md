@@ -4,6 +4,8 @@ A simple SQLite Database written in C.
 
 This project was made using [the following guide as reference](https://cstack.github.io/db_tutorial/).
 
+As of December 23rd, 2023, this project is completely caught up with the aforementioned guide although I will continue to work on it a bit on my own.
+
 ## Building and running
 
 To try this database out for yourself, do the following:
@@ -14,3 +16,12 @@ To try this database out for yourself, do the following:
 2. Unzip the repo and cd into the new folder.
 3. Build the project using `make`.
 4. Run the database using `./main mydb.db`.
+
+## TODO
+
+* Fix bugs with splitting internal nodes.
+
+* Have the program automatically search for a mydb.db file and create one if it doesn't exist.
+    * Users should still be able to pass in their own file if they choose to do so.
+
+* Fix automated tests.
