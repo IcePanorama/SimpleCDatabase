@@ -20,6 +20,11 @@ main(int argc, char* argv[])
     if (argc < 2)
     {
         filename = "mydb.db";
+        FILE* file = fopen(filename, "r");
+        if (!file)
+        {
+            FILE* file = fopen(filename, "w");
+        }
     }
     else
     {
