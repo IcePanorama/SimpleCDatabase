@@ -27,6 +27,6 @@ To try this database out for yourself, do the following:
 
 Since catching up with the guide referenced above, I have made the following modifications to the program:
 
-* Program now automatically searches for a mydb.db file and create one if it doesn't exist.
+* Program now automatically searches for a mydb.db file and creates one if it doesn't exist.
     * Users can still pass in their own file if they choose to do so.
 
