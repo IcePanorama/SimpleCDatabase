@@ -15,13 +15,17 @@ void read_input(InputBuffer* input_buffer);
 int
 main(int argc, char* argv[])
 {
+    char* filename;
+
     if (argc < 2)
     {
-        puts("Must supply a database filename.");
-        exit(EXIT_FAILURE);
+        filename = "mydb.db";
+    }
+    else
+    {
+        filename = argv[1];
     }
 
-    char* filename = argv[1];
     Table* table = db_open(filename);
 
     InputBuffer* input_buffer = new_input_buffer();
