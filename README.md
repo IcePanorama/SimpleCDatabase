@@ -15,7 +15,7 @@ To try this database out for yourself, do the following:
     - Note: The Makefile for this project is only designed with Linux machines in mind.
 2. Unzip the repo and cd into the new folder.
 3. Build the project using `make`.
-4. Run the database using `./main mydb.db`.
+4. Run the database using `./main`.
 
 ## TODO
 
