@@ -1,5 +1,14 @@
-main:
-	gcc src/*.c -I./include/ -o main -Wpedantic -Wall #-Werror temp disabled due to pointer of type 'void *' used in arithmetic error
+SRC_DIR=src
+SRC_FILES=$(SRC_DIR)/*.c
+INCL_DIR=include
+TARGET=main
+# Temporarily not using -Werror
+CFLAGS=-Wall -Wpedantic 
+
+all: main
+
+main: 
+	gcc $(SRC_FILES) -I./$(INCL_DIR) -o $(TARGET) $(CFLAGS)
 
 clean:
-	rm main
+	rm $(TARGET)
