@@ -1,6 +1,7 @@
 from behave import *
 import subprocess
 import time
+import os
 
 
 def run_script(commands: list[str]) -> list[str]:
@@ -13,10 +14,7 @@ def run_script(commands: list[str]) -> list[str]:
                 process.stdin.flush()
             except BrokenPipeError:
                 break
-        print(str(process.communicate()))
         raw_output = str(process.communicate()[0]).split("\n")
-
-    print(f'Actual output: {raw_output}')
 
     return raw_output
 
