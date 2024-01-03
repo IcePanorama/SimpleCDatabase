@@ -1,7 +1,5 @@
 from behave import *
 import subprocess
-import time
-import os
 
 
 def run_script(commands: list[str]) -> list[str]:
@@ -14,7 +12,9 @@ def run_script(commands: list[str]) -> list[str]:
                 process.stdin.flush()
             except BrokenPipeError:
                 break
-        raw_output = str(process.communicate()[0]).split("\n")
+        process.stdin.close()
+        process.wait()
+        raw_output = str(process.stdout.read()).split("\n")
 
     return raw_output
 
@@ -31,7 +31,7 @@ def arrays_match(arr0, arr1) -> bool:
 
 @given('we insert a row into the database')
 def step_impl(context):
-    context.result0 = run_script([
+    context.results = run_script([
         "insert 1 user1 person1@example.com",
         "select",
         ".exit"
@@ -44,12 +44,12 @@ def step_impl(context):
                        "db > (1, user1, person1@example.com)",
                        "Executed.",
                        "db > "]
-    assert arrays_match(context.result0, expected_result) is True
+    assert arrays_match(context.results, expected_result) is True
 
 
 @given('we insert a row')
 def step_impl(context):
-    context.result0 = run_script([
+    context.results = run_script([
         "insert 1 user1 person1@example.com",
         ".exit"
         ])
@@ -57,12 +57,13 @@ def step_impl(context):
             "db > Executed.",
             "db > ",
     ]
-    assert arrays_match(context.result0, expected_result)
+    assert arrays_match(context.results, expected_result)
 
 
-@then('we should still be able to see the row we inserted after closing.')
+@then('we should still be able to see the row after closing the db.')
 def step_impl(context):
-    context.result0 = run_script([
+    context.results.clear()
+    context.results = run_script([
         "select",
         ".exit"
         ])
@@ -72,4 +73,4 @@ def step_impl(context):
             "db > "
     ]
 
-    assert arrays_match(context.result0, expected_result)
+    assert arrays_match(context.results, expected_result)

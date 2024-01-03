@@ -2,9 +2,12 @@ from behave import *
 import os
 
 
-def before_scenario(context, scenario):
-    context.temp = os.popen('rm mydb.db')
+def before_feature(context, feature):
+    # context.temp = os.popen('rm mydb.db')
+    # context.results = []
+    context.temp = "mydb.db"
 
 
-def after_scenario(context, scenario):
-    context.temp = os.popen('rm mydb.db')
+def after_feature(context, feature):
+    if os.path.exists(context.temp):
+        os.remove(context.temp)
