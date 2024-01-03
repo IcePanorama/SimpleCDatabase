@@ -74,3 +74,23 @@ def step_impl(context):
     ]
 
     assert arrays_match(context.results, expected_result)
+
+
+@given('we insert 1401 rows')
+def step_impl(context):
+    commands = []
+    for i in range(1, 1401):
+        commands.append("insert " + str(i) + " user" + str(i) + " person" + str(i) + "@example.com")
+    commands.append(".exit")
+
+    context.results = run_script(commands)
+
+
+@then('we should recieve a table full error msg.')
+def step_impl(context):
+    expected_results = [
+            "db > Executed.",
+            "db > "
+            ]
+
+    assert arrays_match([context.results[-2], context.results[-1]], expected_results)
