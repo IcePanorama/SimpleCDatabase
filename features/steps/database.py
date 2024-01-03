@@ -517,3 +517,29 @@ def step_impl(context):
               + expected_results[i])
 
     assert arrays_match(context.results, expected_results)
+
+
+@given('we enter the constants command')
+def step_impl(context):
+    script = [
+            ".constants",
+            ".exit",
+            ]
+
+    context.results = run_script(script)
+
+
+@then('the db should output a list of constants.')
+def step_impl(context):
+    expected_results = [
+            "db > Constants:",
+            "ROW_SIZE: 293",
+            "COMMON_NODE_HEADER_SIZE: 6",
+            "LEAF_NODE_HEADER_SIZE: 14",
+            "LEAF_NODE_CELL_SIZE: 297",
+            "LEAF_NODE_SPACE_FOR_CELLS: 4082",
+            "LEAF_NODE_MAX_CELLS: 13",
+            "db > ",
+            ]
+
+    assert arrays_match(context.results, expected_results)
