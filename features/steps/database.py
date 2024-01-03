@@ -44,7 +44,7 @@ def step_impl(context):
                        "db > (1, user1, person1@example.com)",
                        "Executed.",
                        "db > "]
-    assert arrays_match(context.results, expected_result) is True
+    assert arrays_match(context.results, expected_result)
 
 
 @given('we insert a row')
