@@ -140,3 +140,27 @@ def step_impl(context):
             "db > "
             ]
     assert arrays_match(context.results, expect_results)
+
+
+@given('we insert a row into the db with a negative id')
+def step_impl(context):
+    script = [
+            "insert -1 cstack foo@bar.com",
+            "select",
+            ".exit"
+            ]
+    context.results = run_script(script)
+
+
+@then('we should recieve an id is negative error message.')
+def step_impl(context):
+    expected_results = [
+            "db > ID must be positive.",
+            "db > Executed.",
+            "db > "
+            ]
+
+    print(f'{context.results=}')
+    print(f'{expected_results=}')
+
+    assert arrays_match(context.results, expected_results)
