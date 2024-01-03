@@ -160,7 +160,28 @@ def step_impl(context):
             "db > "
             ]
 
-    print(f'{context.results=}')
-    print(f'{expected_results=}')
+    assert arrays_match(context.results, expected_results)
+
+
+@given('we insert two rows with the same id')
+def step_impl(context):
+    script = [
+            "insert 1 user1 person1@example.com",
+            "insert 1 user1 person1@example.com",
+            "select",
+            ".exit"
+            ]
+    context.results = run_script(script)
+
+
+@then('we should get a duplicate id error message.')
+def step_impl(context):
+    expected_results = [
+            "db > Executed.",
+            "db > Error: Duplicate key.",
+            "db > (1, user1, person1@example.com)",
+            "Executed.",
+            "db > "
+            ]
 
     assert arrays_match(context.results, expected_results)

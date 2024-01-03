@@ -78,7 +78,7 @@ main(int argc, char* argv[])
                 puts("Executed.");
                 break;
             case (EXECUTE_DUPLICATE_KEY):
-                puts("Error: Duplicate Key");
+                puts("Error: Duplicate key.");
                 break;
             case (EXECUTE_TABLE_FULL):
                 puts("Error: Table full.");
