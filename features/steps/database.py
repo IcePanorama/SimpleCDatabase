@@ -512,10 +512,6 @@ def step_impl(context):
             "db > ",
             ]
 
-    for i in range(0, len(context.results)):
-        print("Results: " + context.results[i] + "\t\t\tExpected: "
-              + expected_results[i])
-
     assert arrays_match(context.results, expected_results)
 
 
@@ -539,6 +535,47 @@ def step_impl(context):
             "LEAF_NODE_CELL_SIZE: 297",
             "LEAF_NODE_SPACE_FOR_CELLS: 4082",
             "LEAF_NODE_MAX_CELLS: 13",
+            "db > ",
+            ]
+
+    assert arrays_match(context.results, expected_results)
+
+
+@given('we insert 15 elements into the db and run select')
+def step_impl(context):
+    script = []
+    for i in range(1, 16):
+        script.append("insert " + str(i) + " user" + str(i) + " person"
+                      + str(i) + "@example.com")
+    script.append("select")
+    script.append(".exit")
+
+    _results = run_script(script)
+
+    context.results = []
+    for i in range(15, len(_results)):
+        context.results.append(_results[i])
+
+
+@then('the database should properly display all 15 rows.')
+def step_impl(context):
+    expected_results = [
+            "db > (1, user1, person1@example.com)",
+            "(2, user2, person2@example.com)",
+            "(3, user3, person3@example.com)",
+            "(4, user4, person4@example.com)",
+            "(5, user5, person5@example.com)",
+            "(6, user6, person6@example.com)",
+            "(7, user7, person7@example.com)",
+            "(8, user8, person8@example.com)",
+            "(9, user9, person9@example.com)",
+            "(10, user10, person10@example.com)",
+            "(11, user11, person11@example.com)",
+            "(12, user12, person12@example.com)",
+            "(13, user13, person13@example.com)",
+            "(14, user14, person14@example.com)",
+            "(15, user15, person15@example.com)",
+            "Executed.",
             "db > ",
             ]
 
