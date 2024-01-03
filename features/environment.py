@@ -3,8 +3,6 @@ import os
 
 
 def before_feature(context, feature):
-    # context.temp = os.popen('rm mydb.db')
-    # context.results = []
     context.temp = "mydb.db"
 
 

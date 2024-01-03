@@ -94,3 +94,27 @@ def step_impl(context):
             ]
 
     assert arrays_match([context.results[-2], context.results[-1]], expected_results)
+
+
+@given('we insert a 32 character long username and a 255 character long email')
+def step_impl(context):
+    context.long_username = "a"*32
+    context.long_email = "a"*255
+    script = [
+            "insert 1 " + str(context.long_username) + " " + str(context.long_email),
+            "select",
+            ".exit"
+            ]
+    context.results = run_script(script)
+
+
+@then('we should expect the database to behave normally.')
+def step_impl(context):
+    expected_results = [
+            "db > Executed.",
+            "db > (1, " + str(context.long_username) + ", " + str(context.long_email) + ")",
+            "Executed.",
+            "db > "
+            ]
+
+    assert arrays_match(context.results, expected_results)
