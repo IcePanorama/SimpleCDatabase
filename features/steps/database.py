@@ -214,3 +214,46 @@ def step_impl(context):
             ]
 
     assert arrays_match(context.results, expected_results)
+
+
+@given('we insert 14 rows into the db')
+def step_impl(context):
+    script = []
+    for i in range(1, 15):
+        script.append("insert " + str(i) + " user" + str(i) + " person"
+                      + str(i) + "@example.com")
+    script.append(".btree")
+    script.append(".exit")
+
+    _results = run_script(script)
+    context.results = []
+    for i in range(14, len(_results)):
+        context.results.append(_results[i])
+
+
+@then('btree should properly display a 3-leaf-node btree.')
+def step_impl(context):
+    expected_results = [
+            "db > Tree:",
+            "- internal (size 1)",
+            "  - leaf (size 7)",
+            "    - 1",
+            "    - 2",
+            "    - 3",
+            "    - 4",
+            "    - 5",
+            "    - 6",
+            "    - 7",
+            "  - key 7",
+            "  - leaf (size 7)",
+            "    - 8",
+            "    - 9",
+            "    - 10",
+            "    - 11",
+            "    - 12",
+            "    - 13",
+            "    - 14",
+            "db > ",
+            ]
+
+    assert arrays_match(context.results, expected_results)
