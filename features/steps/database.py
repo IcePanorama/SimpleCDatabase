@@ -118,3 +118,25 @@ def step_impl(context):
             ]
 
     assert arrays_match(context.results, expected_results)
+
+
+@given('we insert a 33 character-long username and a 256 character-long email')
+def step_impl(context):
+    context.long_username = "a"*33
+    context.long_email = "a"*256
+    script = [
+            "insert 1 " + str(context.long_username) + " " + str(context.long_email),
+            "select",
+            ".exit"
+            ]
+    context.results = run_script(script)
+
+
+@then('we should expect a string too long error message.')
+def step_impl(context):
+    expect_results = [
+            "db > String is too long.",
+            "db > Executed.",
+            "db > "
+            ]
+    assert arrays_match(context.results, expect_results)
