@@ -1,6 +1,7 @@
 SRC_DIR=src
 SRC_FILES=$(SRC_DIR)/*.c
 INCL_DIR=include
+INCL_FILES=$(INCL_DIR)/*.h
 TARGET=database
 # Temporarily not using -Werror
 CFLAGS=-Wall -Wpedantic
@@ -18,4 +19,4 @@ clean:
 	rm $(TARGET)
 
 format:
-	clang-format -style=GNU -i $(SRC_FILES)
+	clang-format -style=GNU -i $(SRC_FILES) $(INCL_FILES)
