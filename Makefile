@@ -3,15 +3,19 @@ SRC_FILES=$(SRC_DIR)/*.c
 INCL_DIR=include
 TARGET=database
 # Temporarily not using -Werror
-CFLAGS=-Wall -Wpedantic 
+CFLAGS=-Wall -Wpedantic
+FORMAT=GNU
 
-all: $(TARGET) test
+all: format $(TARGET) test
 
-database: 
+$(TARGET): 
 	gcc $(SRC_FILES) -I./$(INCL_DIR) -o $(TARGET) $(CFLAGS)
 
-test:
+test: $(TARGET)
 	behave
 
 clean:
 	rm $(TARGET)
+
+format:
+	clang-format -style=GNU -i $(SRC_FILES)

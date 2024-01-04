@@ -1,114 +1,113 @@
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
-#include <stdint.h>
 
 #include "input_buffer.h"
 #include "meta_command_result.h"
-#include "table.h"
 #include "statement.h"
+#include "table.h"
 
-void print_prompt(void);
-void read_input(InputBuffer* input_buffer);
+void print_prompt (void);
+void read_input (InputBuffer *input_buffer);
 
 int
-main(int argc, char* argv[])
+main (int argc, char *argv[])
 {
-    char* filename;
+  char *filename;
 
-    if (argc < 2)
+  if (argc < 2)
     {
-        filename = "mydb.db";
-        FILE* file = fopen(filename, "r");
-        if (!file)
+      filename = "mydb.db";
+      FILE *file = fopen (filename, "r");
+      if (!file)
         {
-            FILE* file = fopen(filename, "w");
+          FILE *file = fopen (filename, "w");
         }
     }
-    else
+  else
     {
-        filename = argv[1];
+      filename = argv[1];
     }
 
-    Table* table = db_open(filename);
+  Table *table = db_open (filename);
 
-    InputBuffer* input_buffer = new_input_buffer();
+  InputBuffer *input_buffer = new_input_buffer ();
 
-    while (true)
+  while (true)
     {
-        print_prompt();
-        read_input(input_buffer);
+      print_prompt ();
+      read_input (input_buffer);
 
-        if (input_buffer->buffer[0] == '.')
+      if (input_buffer->buffer[0] == '.')
         {
-            switch (do_meta_command(input_buffer, table))
+          switch (do_meta_command (input_buffer, table))
             {
-                case (META_COMMAND_SUCCESS):
-                    continue;
-                case (META_COMMAND_UNRECOGNIZED_COMMAND):
-                    printf("Unrecognized command '%s'.\n", input_buffer->buffer);
-                    continue;
+            case (META_COMMAND_SUCCESS):
+              continue;
+            case (META_COMMAND_UNRECOGNIZED_COMMAND):
+              printf ("Unrecognized command '%s'.\n", input_buffer->buffer);
+              continue;
             }
         }
 
-        Statement statement;
-        switch (prepare_statement(input_buffer, &statement))
+      Statement statement;
+      switch (prepare_statement (input_buffer, &statement))
         {
-            case (PREPARE_SUCCESS):
-                break;
-            case (PREPARE_NEGATIVE_ID):
-                puts("ID must be positive.");
-                continue;
-            case (PREPARE_STRING_TOO_LONG):
-                puts("String is too long.");
-                continue;
-            case (PREPARE_SYNTAX_ERROR):
-                puts("Syntax error. Could not parse statement.");
-                continue;
-            case (PREPARE_UNRECOGNIZED_STATEMENT):
-                printf("Unrecognized keyword at start of '%s'.\n", 
-                        input_buffer->buffer);
-                continue;
+        case (PREPARE_SUCCESS):
+          break;
+        case (PREPARE_NEGATIVE_ID):
+          puts ("ID must be positive.");
+          continue;
+        case (PREPARE_STRING_TOO_LONG):
+          puts ("String is too long.");
+          continue;
+        case (PREPARE_SYNTAX_ERROR):
+          puts ("Syntax error. Could not parse statement.");
+          continue;
+        case (PREPARE_UNRECOGNIZED_STATEMENT):
+          printf ("Unrecognized keyword at start of '%s'.\n",
+                  input_buffer->buffer);
+          continue;
         }
 
-        switch (execute_statement(&statement, table))
+      switch (execute_statement (&statement, table))
         {
-            case (EXECUTE_SUCCESS):
-                puts("Executed.");
-                break;
-            case (EXECUTE_DUPLICATE_KEY):
-                puts("Error: Duplicate key.");
-                break;
-            case (EXECUTE_TABLE_FULL):
-                puts("Error: Table full.");
-                break;
+        case (EXECUTE_SUCCESS):
+          puts ("Executed.");
+          break;
+        case (EXECUTE_DUPLICATE_KEY):
+          puts ("Error: Duplicate key.");
+          break;
+        case (EXECUTE_TABLE_FULL):
+          puts ("Error: Table full.");
+          break;
         }
     }
 
-
-    return 0;
+  return 0;
 }
 
-void 
-print_prompt(void)
+void
+print_prompt (void)
 {
-    printf("db > ");
+  printf ("db > ");
 }
 
-void 
-read_input(InputBuffer* input_buffer)
+void
+read_input (InputBuffer *input_buffer)
 {
-    ssize_t bytes_read = getline(&(input_buffer->buffer), 
-            &(input_buffer->buffer_length), stdin);
+  ssize_t bytes_read = getline (&(input_buffer->buffer),
+                                &(input_buffer->buffer_length), stdin);
 
-    if (bytes_read <= 0)
+  if (bytes_read <= 0)
     {
-        printf("Error reading input\n");
-        exit(EXIT_FAILURE);
+      printf ("Error reading input\n");
+      exit (EXIT_FAILURE);
     }
 
-    // Ignore trailing newline
-    input_buffer->input_length = bytes_read - 1;
-    input_buffer->buffer[bytes_read - 1] = 0;
+  // Ignore trailing newline
+  input_buffer->input_length = bytes_read - 1;
+  input_buffer->buffer[bytes_read - 1] = 0;
 }
