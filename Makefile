@@ -1,14 +1,17 @@
 SRC_DIR=src
 SRC_FILES=$(SRC_DIR)/*.c
 INCL_DIR=include
-TARGET=main
+TARGET=database
 # Temporarily not using -Werror
 CFLAGS=-Wall -Wpedantic 
 
-all: main
+all: $(TARGET) test
 
-main: 
+database: 
 	gcc $(SRC_FILES) -I./$(INCL_DIR) -o $(TARGET) $(CFLAGS)
+
+test:
+	behave
 
 clean:
 	rm $(TARGET)

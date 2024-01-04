@@ -11,17 +11,17 @@ As of December 23rd, 2023, this project is completely caught up with the aforeme
 To try this database out for yourself, do the following:
 
 1. Clone the repo onto your machine.
-    - Use the green `Code` button above for instructions on how to do so.
-    - Note: The Makefile for this project is only designed with Linux machines in mind.
-2. Unzip the repo and cd into the new folder.
+    - Using HTTPS: `git clone https://github.com/IcePanorama/SimpleCDatabase.git`
+    - Using SSH: `git clone git@github.com:IcePanorama/SimpleCDatabase.git`
+    - **Note: The Makefile for this project is primarily designed with Linux machines in mind.**
+    - The project may still build on non-Linux operating systems, but your mileage may vary.
+2. Move into the new directory using `cd SimpleCDatabase`.
 3. Build the project using `make`.
-4. Run the database using `./main`.
+4. Finally, run the database using `./database`.
 
 ## TODO
 
 * Fix bugs with splitting internal nodes.
-
-* Fix automated tests.
 
 ## Noteable Modifications
 
@@ -30,3 +30,6 @@ Since catching up with the guide referenced above, I have made the following mod
 * Program now automatically searches for a mydb.db file and creates one if it doesn't exist.
     * Users can still pass in their own file if they choose to do so.
 
+* Converted automated testing from 'rspec' (written in Ruby) to 'behave' (written in Python).
+    * Makefile now automatically runs tests after building.
+    * Currently, 3 test fail due to the aforementioned bug with splitting internal nodes.

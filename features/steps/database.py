@@ -4,7 +4,7 @@ import subprocess
 
 def run_script(commands: list[str]) -> list[str]:
     raw_output = None
-    with subprocess.Popen(["./main"], stdin=subprocess.PIPE,
+    with subprocess.Popen(["./database"], stdin=subprocess.PIPE,
                           stdout=subprocess.PIPE, text=True) as process:
         for command in commands:
             try:
@@ -12,6 +12,7 @@ def run_script(commands: list[str]) -> list[str]:
                 process.stdin.flush()
             except BrokenPipeError:
                 break
+        # Closing stdin & waiting to prevent duplicate results error.
         process.stdin.close()
         process.wait()
         raw_output = str(process.stdout.read()).split("\n")
@@ -19,7 +20,7 @@ def run_script(commands: list[str]) -> list[str]:
     return raw_output
 
 
-def arrays_match(arr0, arr1) -> bool:
+def arrays_match(arr0: list[str], arr1: list[str]) -> bool:
     if len(arr0) != len(arr1):
         return False
 
@@ -29,13 +30,14 @@ def arrays_match(arr0, arr1) -> bool:
     return True
 
 
-@given('we insert a row into the database')
+@given('we insert a row into the database and run the select command')
 def step_impl(context):
-    context.results = run_script([
-        "insert 1 user1 person1@example.com",
-        "select",
-        ".exit"
-        ])
+    script = [
+            "insert 1 user1 person1@example.com",
+            "select",
+            ".exit"
+            ]
+    context.results = run_script(script)
 
 
 @then('we should be able to retrieve that row from the database.')
@@ -49,29 +51,33 @@ def step_impl(context):
 
 @given('we insert a row')
 def step_impl(context):
-    context.results = run_script([
-        "insert 1 user1 person1@example.com",
-        ".exit"
-        ])
+    script = [
+            "insert 1 user1 person1@example.com",
+            ".exit"
+            ]
+    context.results = run_script(script)
+
     expected_result = [
             "db > Executed.",
             "db > ",
-    ]
+            ]
+
     assert arrays_match(context.results, expected_result)
 
 
 @then('we should still be able to see the row after closing the db.')
 def step_impl(context):
-    context.results.clear()
-    context.results = run_script([
-        "select",
-        ".exit"
-        ])
+    script = [
+            "select",
+            ".exit"
+            ]
+    context.results = run_script(script)
+
     expected_result = [
             "db > (1, user1, person1@example.com)",
             "Executed.",
             "db > "
-    ]
+            ]
 
     assert arrays_match(context.results, expected_result)
 
@@ -80,7 +86,8 @@ def step_impl(context):
 def step_impl(context):
     commands = []
     for i in range(1, 1401):
-        commands.append("insert " + str(i) + " user" + str(i) + " person" + str(i) + "@example.com")
+        commands.append("insert " + str(i) + " user" + str(i) + " person" 
+                        + str(i) + "@example.com")
     commands.append(".exit")
 
     context.results = run_script(commands)
@@ -101,10 +108,11 @@ def step_impl(context):
     context.long_username = "a"*32
     context.long_email = "a"*255
     script = [
-            "insert 1 " + str(context.long_username) + " " + str(context.long_email),
+            "insert 1 " + context.long_username + " " + context.long_email,
             "select",
             ".exit"
             ]
+
     context.results = run_script(script)
 
 
@@ -112,7 +120,7 @@ def step_impl(context):
 def step_impl(context):
     expected_results = [
             "db > Executed.",
-            "db > (1, " + str(context.long_username) + ", " + str(context.long_email) + ")",
+            "db > (1, " + context.long_username + ", " + context.long_email + ")",
             "Executed.",
             "db > "
             ]
@@ -129,6 +137,7 @@ def step_impl(context):
             "select",
             ".exit"
             ]
+
     context.results = run_script(script)
 
 
@@ -139,6 +148,7 @@ def step_impl(context):
             "db > Executed.",
             "db > "
             ]
+
     assert arrays_match(context.results, expect_results)
 
 
@@ -149,6 +159,7 @@ def step_impl(context):
             "select",
             ".exit"
             ]
+
     context.results = run_script(script)
 
 
@@ -171,6 +182,7 @@ def step_impl(context):
             "select",
             ".exit"
             ]
+
     context.results = run_script(script)
 
 
@@ -196,6 +208,7 @@ def step_impl(context):
             ".btree",
             ".exit"
             ]
+
     context.results = run_script(script)
 
 
@@ -295,6 +308,7 @@ def step_impl(context):
             ".btree",
             ".exit",
             ]
+
     _results = run_script(script)
     context.results = []
     for i in range(30, len(_results)):
@@ -419,6 +433,7 @@ def step_impl(context):
             ".btree",
             ".exit",
             ]
+
     _results = run_script(script)
     context.results = []
     for i in range(64, len(_results)):
