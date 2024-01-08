@@ -4,7 +4,7 @@ A simple SQLite Database written in C.
 
 This project was made using [the following guide as reference](https://cstack.github.io/db_tutorial/).
 
-As of December 23rd, 2023, this project is completely caught up with the aforementioned guide although I will continue to work on it a bit on my own. For a full list of modifications that I have made to the program, see [Noteable Modifications](#noteable-modifications).
+As of December 23rd, 2023, this project is completely caught up with the aforementioned guide, although I will continue to work on it a bit on my own. For a full list of modifications that I have made to the program, see [Noteable Modifications](#noteable-modifications).
 
 ## Building and running
 
