@@ -71,7 +71,7 @@ const uint32_t INTERNAL_NODE_CELL_SIZE
     = INTERNAL_NODE_CHILD_SIZE + INTERNAL_NODE_KEY_SIZE;
 
 /* Keep this small for testing */
-const uint32_t INTERNAL_NODE_MAX_CELLS = 3;
+const uint32_t INTERNAL_NODE_MAX_KEYS = 3;
 
 void
 serialize_row (Row *source, void *destination)
@@ -491,7 +491,7 @@ internal_node_insert (Table *table, uint32_t parent_page_num,
 
   uint32_t original_num_keys = *internal_node_num_keys (parent);
 
-  if (original_num_keys >= INTERNAL_NODE_MAX_CELLS)
+  if (original_num_keys >= INTERNAL_NODE_MAX_KEYS)
     {
       internal_node_split_and_insert (table, parent_page_num, child_page_num);
       return;
@@ -603,8 +603,7 @@ internal_node_split_and_insert (Table *table, uint32_t parent_page_num,
    *  For each key until you get to the middle key, move the key and the
    *  child to the new node.
    */
-  for (int i = INTERNAL_NODE_MAX_CELLS - 1; i > INTERNAL_NODE_MAX_CELLS / 2;
-       i--)
+  for (int i = INTERNAL_NODE_MAX_KEYS - 1; i > INTERNAL_NODE_MAX_KEYS / 2; i--)
     {
       cur_page_num = *internal_node_child (old_node, i);
       cur = get_page (table->pager, cur_page_num);
