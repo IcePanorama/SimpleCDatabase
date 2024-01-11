@@ -83,7 +83,10 @@ execute_insert (Statement *statement, Table *table)
 
   if (cursor->cell_num < num_cells)
     {
+      // FIXME: here's where it should be checking for duplicate keys
       uint32_t key_at_index = *leaf_node_key (node, cursor->cell_num);
+      printf ("Key at index: %d\trow_to_insert->id: %d", key_at_index,
+              row_to_insert->id);
       if (key_at_index == key_to_insert)
         {
           return EXECUTE_DUPLICATE_KEY;
