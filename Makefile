@@ -4,7 +4,7 @@ INCL_DIR=include
 INCL_FILES=$(INCL_DIR)/*.h
 TARGET=database
 # Temporarily not using -Werror
-CFLAGS=-Wall -Wpedantic
+CFLAGS=-Wall -Wpedantic -Wextra
 FORMAT=GNU
 
 all: format $(TARGET) test
